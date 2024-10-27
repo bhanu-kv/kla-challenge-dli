@@ -3,7 +3,7 @@ import torch.nn as nn
 import torch.nn.functional as F
 
 class UNetDenoiser(nn.Module):
-    def __init__(self, in_channels=3, out_channels=3, features=[64, 128, 256]):
+    def __init__(self, in_channels=3, out_channels=3, features=[64, 128, 256, 512]):
         super(UNetDenoiser, self).__init__()
         
         # Define the encoder
