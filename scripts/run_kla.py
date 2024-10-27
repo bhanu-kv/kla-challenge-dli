@@ -64,7 +64,7 @@ class DefectDataset(Dataset):
             clean_img = self.transform(clean_img)
         return degraded_img, mask_img, clean_img
     
-filename = "../dataloader_val_revisedv3.pkl"
+filename = "./dataloader_val_revisedv3.pkl"
 with open(filename, 'rb') as f:
     data_loader = pickle.load(f)
 
@@ -79,20 +79,20 @@ if __name__ == '__main__':
         # print(clean_imgs.shape)
         i+=1
         print(i, "/", len(data_loader))
-        denoised_image = nlm_denoise_batch(degraded_imgs, mask_imgs)
+        # denoised_image = nlm_denoise_batch(degraded_imgs, mask_imgs)
         # Define noise standard deviation
-        noise_sigma = 15.0
+        noise_sigma = 45.0
 
         # Perform BM3D denoising
-        # denoised_image = bm3d_batch_denoising(degraded_imgs, noise_sigma)
-    
+        denoised_image = bm3d_batch_denoising(degraded_imgs, noise_sigma)
+
         psnr_nlm = calculate_psnr(clean_imgs, denoised_image)
         worst_psnr = calculate_psnr(clean_imgs, degraded_imgs)
 
         psnr_ls.append(psnr_nlm)
         psnr_worst.append(worst_psnr)
 
-        if i%10 == 0:
+        if i%1 == 0:
             print(f'PSNR (NLM): {np.mean(psnr_ls):.2f} dB')
             print(f'PSNR (WORST): {np.mean(psnr_worst):.2f} dB')
         

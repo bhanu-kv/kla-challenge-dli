@@ -21,7 +21,7 @@ class DefectDataset(Dataset):
         triplets = []
         for object_name in os.listdir(self.root_dir):
             #print(object_name)
-            object_path = os.path.join(self.root_dir, object_name, 'Train')
+            object_path = os.path.join(self.root_dir, object_name, 'Val')
             degraded_path = os.path.join(object_path, 'Degraded_image')
             mask_path = os.path.join(object_path, 'Defect_mask')
             clean_path = os.path.join(object_path, 'GT_clean_image')
@@ -67,7 +67,7 @@ transform = transforms.Compose([
 if __name__ == '__main__':
 
 # Create dataset and DataLoader
-    dataset = DefectDataset(root_dir='../Denoising_Dataset_train_val/', transform=transform)
+    dataset = DefectDataset(root_dir='../../Denoising_Dataset_train_val/', transform=transform)
     data_loader = DataLoader(dataset, batch_size=1, shuffle=True, num_workers=1)
     with open('dataloader_val_revisedv3.pkl', 'wb') as f:
         pickle.dump(data_loader, f)

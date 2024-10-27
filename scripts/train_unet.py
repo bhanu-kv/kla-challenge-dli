@@ -1,27 +1,3 @@
-# # Example setup for training
-# import torch.optim as optim
-
-# model = UNetDenoiser().to(device)
-# criterion = nn.MSELoss()
-# optimizer = optim.Adam(model.parameters(), lr=1e-3)
-
-# # Training loop
-# num_epochs = 20
-# for epoch in range(num_epochs):
-#     for noisy_img, clean_img in train_loader:  # Assuming DataLoader is set up
-#         noisy_img, clean_img = noisy_img.to(device), clean_img.to(device)
-        
-#         # Forward pass
-#         denoised_img = model(noisy_img)
-#         loss = criterion(denoised_img, clean_img)
-        
-#         # Backward pass and optimize
-#         optimizer.zero_grad()
-#         loss.backward()
-#         optimizer.step()
-        
-#     print(f"Epoch [{epoch+1}/{num_epochs}], Loss: {loss.item():.4f}")
-
 #!/usr/bin/env python3
 
 import sys
@@ -100,11 +76,18 @@ with open(filename, 'rb') as f:
 if __name__ == '__main__':
     psnr_ls = []
     psnr_worst = []
+    
     i = 0
-    device = "cuda"
+    
+    # Assuming UNetDenoiser and train_loader are already defined
+    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     model = UNetDenoiser().to(device)
     criterion = nn.MSELoss()
     optimizer = optim.Adam(model.parameters(), lr=1e-3)
+
+    # Directory to save model weights
+    weights_dir = "../model_weights/unet_weights"
+    os.makedirs(weights_dir, exist_ok=True)
 
     # Training loop
     num_epochs = 20
@@ -127,7 +110,9 @@ if __name__ == '__main__':
             loss.backward()
             optimizer.step()
         
+        torch.save(model.state_dict(), os.path.join(weights_dir, f"unet_epoch_{epoch+1}.pth"))
         print(f"Epoch [{epoch+1}/{num_epochs}], Loss: {loss.item():.4f}")
+
             # psnr_nlm = calculate_psnr(clean_imgs, denoised_img)
             # worst_psnr = calculate_psnr(clean_imgs, degraded_imgs)
 
